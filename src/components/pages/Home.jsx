@@ -1,13 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-// import { setCategory, setSort } from '../store/actions/filters';
-import { axiosUsers, setUsers } from '../../store/actions/users';
-// import { setSort } from '../../store/actions/filters';
+import { axiosUsers, setUsers, viewUserInfo, addNewUser } from '../../store/actions/users';
 
-import { UserData, LoadingData, UserInfo } from '../../components';
-
-import arrow from '../../assets/arrow-top.svg';
+import { UserData, LoadingData, UserInfo, NewUser } from '../../components';
 
 const theadArr = [
     { name: 'id', id: 1 },
@@ -18,16 +14,18 @@ const theadArr = [
 ];
 
 const Home = React.memo(() => {
-    const { isLoaded, users } = useSelector(state => { // mapState
+    const { isLoaded, users, userInfo } = useSelector(state => {
         return {
             isLoaded: state.userReducer.isLoaded,
             users: state.userReducer.items,
+            userInfo: state.userReducer.item,
         };
     });
 
     const [sortDirection, setDirection] = React.useState(false);
+    const [activeSort, setSort] = React.useState(false);
 
-    const dispatch = useDispatch(); // mapActions
+    const dispatch = useDispatch();
 
     React.useEffect(() => {
         let timerId = setTimeout(() => {
@@ -38,6 +36,10 @@ const Home = React.memo(() => {
         };
     }, [dispatch]);
 
+    const scrollToBottom = () => {
+        window.scrollTo({ top: 2000, behavior: 'smooth' });
+    };
+
     const sortUsers = (type) => {
         const copyItems = [...users];
         const sortableUsers = copyItems.sort((first, second) => {
@@ -45,16 +47,38 @@ const Home = React.memo(() => {
                 case true: return first[type] < second[type] ? 1 : -1; // по убыванию
                 case false: return first[type] < second[type] ? -1 : 1; // по возрастанию
                 default: return false;
-            }
-        })
+            };
+        });
+        setSort(!activeSort);
         dispatch(setUsers(sortableUsers));
         setDirection(!sortDirection);
-    }
+    };
+
+    const viewMoreInfo = (user) => {
+        dispatch(viewUserInfo(user));
+        let timerScroll = setTimeout(() => scrollToBottom(), 0);
+        return () => {
+            clearTimeout(timerScroll);
+        };
+    };
+
+    const addNewPerson = React.useCallback((user) => {
+        dispatch(addNewUser(user));
+    }, [dispatch]);
 
     return (
         <div className="container">
+            <button onClick={  }>SMALL DATA</button>
+            <button onClick={  }>BIG DATA</button>
             {
-                !users && <h2 className="content__title">Все пользователи</h2>
+                isLoaded && 
+                <>
+                    <NewUser 
+                        addPerson={ addNewPerson }
+                        users = { users }
+                    />
+                    <h2 className="content__title">Все пользователи</h2>
+                </>
             }
             <div className="content__items">
                 {
@@ -66,17 +90,18 @@ const Home = React.memo(() => {
                                         theadArr.map(({ name, id }) => {
                                             return (
                                                 <th
-                                                    className="content__table__strings--head"
+                                                    // className="content__table__strings--head"
+                                                    className= {activeSort ? 'ascending' : 'descending'}
                                                     key={ `${ id }_${ name }` }
                                                     onClick={ () => sortUsers(name) }
                                                 >
                                                     { name }
-                                                    <svg className={ sortDirection ? 'rotate' : '' } width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    {/* { activeSort && <svg className={ sortDirection ? '' : 'rotate' } width="10" height="6" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M10 5C10 5.16927 9.93815 5.31576 9.81445 5.43945C9.69075 5.56315 9.54427 5.625 9.375 
                                                         5.625H0.625C0.455729 5.625 0.309245 5.56315 0.185547 5.43945C0.061849 5.31576 0 5.16927 0 5C0 
                                                         4.83073 0.061849 4.68424 0.185547 4.56055L4.56055 0.185547C4.68424 0.061849 4.83073 0 5 0C5.16927 
-                                                        0 5.31576 0.061849 5.43945 0.185547L9.81445 4.56055C9.93815 4.68424 10 4.83073 10 5Z" fill="#2C2C2C"/>
-                                                    </svg>
+                                                        0 5.31576 0.061849 5.43945 0.185547L9.81445 4.56055C9.93815 4.68424 10 4.83073 10 5Z"/>
+                                                    </svg>} */}
                                                 </th>
                                             )
                                         })
@@ -88,6 +113,7 @@ const Home = React.memo(() => {
                                             <tr
                                                 className="content__table__strings"
                                                 key={ `${user.id}_${i}` }
+                                                onClick={ () => viewMoreInfo(user) }
                                             >
                                                 <UserData { ...user } />
                                             </tr>
@@ -98,11 +124,9 @@ const Home = React.memo(() => {
                         </table>
                         : <LoadingData />
                 }
-                {/* {
-                stateVisibleInfo && users.map((user, i) => {
-                    return <UserInfo key={`${user.id}_${i}`} {...user} />
-                })
-            } */}
+                {
+                    userInfo && <UserInfo { ...userInfo } />
+                }    
             </div>
         </div>
     );
