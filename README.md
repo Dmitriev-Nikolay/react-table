@@ -1,3 +1,3 @@
 # react-table
 
-https://dmitriev-nikolay.github.io/react-table/
+https://react-table-redux.herokuapp.com/
