@@ -26,7 +26,7 @@ const users = (state = initialState, action) => {
             return {
                 ...state, items: !([...state.items].find(el => el.id === action.payload.id))
                     ? [action.payload, ...state.items]
-                    : [...state.items]
+                    : [...state.items],
             };
         default:
             return state;

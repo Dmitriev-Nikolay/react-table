@@ -19,7 +19,11 @@ const FilterForm = ({ searchUser }) => {
                 onChange={ valueChangeHandler }
                 value={ value }
             />
-            <button className="button"onClick={ () => searchTr(value) } >Поиск</button>
+            <button 
+                className="button" 
+                onClick={ () => searchTr(value) } >
+                Поиск
+            </button>
         </div>
     );
 };

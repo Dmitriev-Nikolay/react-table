@@ -1,7 +1,4 @@
 import React from 'react';
-// import classNames from 'classnames';
-// import PropTypes from 'prop-types';
-
 
 const UserData = React.memo((props) => {
     const { id, firstName, lastName, email, phone } = props; // { ...user }

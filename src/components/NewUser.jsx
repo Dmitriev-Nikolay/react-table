@@ -24,10 +24,10 @@ const NewUser = ({ addPerson }) => {
             'email': email,
             'phone': phone,
             'discription': ''
-        }
+        };
         if (id === '' || firstName === '' || lastName === '' || email === '' || phone === '') {
             return;
-        }
+        };
         addPerson(newUser);
         setId('');
         setFirstName('');
@@ -38,7 +38,11 @@ const NewUser = ({ addPerson }) => {
 
     return (
         <div className="container__form">
-            <button className="button" onClick={ toggleFieldset }>Добавить пользователя</button>
+            <button 
+                className="button" 
+                onClick={ toggleFieldset }>
+                Добавить пользователя
+            </button>
             { 
                 isShown &&
                 <form className="container__add-form">
