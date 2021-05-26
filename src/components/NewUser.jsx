@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NewUser = ({ addPerson, users}) => {
+const NewUser = ({ addPerson }) => {
     const [isShown, setIsShown] = React.useState(false);
 
     const [id, setId] = React.useState('');
@@ -9,7 +9,7 @@ const NewUser = ({ addPerson, users}) => {
     const [email, setEmail] = React.useState('');
     const [phone, setPhone] = React.useState('');
 
-    const toggleFIeldset = () => setIsShown(!isShown);
+    const toggleFieldset = () => setIsShown(!isShown);
 
     const handleChange = (event, setFunc) => {
         return setFunc(event.target.value);
@@ -38,7 +38,7 @@ const NewUser = ({ addPerson, users}) => {
 
     return (
         <div className="container__form">
-            <button className="button" onClick={ toggleFIeldset }>Добавить пользователя</button>
+            <button className="button" onClick={ toggleFieldset }>Добавить пользователя</button>
             { 
                 isShown &&
                 <form className="container__add-form">
