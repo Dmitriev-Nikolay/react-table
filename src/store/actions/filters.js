@@ -1,4 +1,4 @@
-export const setSort = (filteredItems) => ({
-    type: 'SET_SORT',
+export const setFilter = (filteredItems) => ({
+    type: 'SET_FILTER',
     payload: filteredItems,
 });

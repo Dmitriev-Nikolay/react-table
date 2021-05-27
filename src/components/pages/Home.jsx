@@ -2,8 +2,9 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { axiosUsers, setUsers, viewUserInfo, addNewUser } from '../../store/actions/users';
+// import { setFilter } from '../../store/actions/filters';
 
-import { UserData, LoadingData, UserInfo, NewUser, FilterForm, ToogleData } from '../../components';
+import { UserData, LoadingData, UserInfo, NewUser, FilterForm, ToggleData, PaginationTable } from '../../components';
 
 const theadArr = [
     { name: 'id', id: 1 },
@@ -14,32 +15,35 @@ const theadArr = [
 ];
 
 const Home = React.memo(() => {
-    const { isLoaded, users, userInfo } = useSelector(state => {
+    const { isLoaded, users, userInfo, pageCount, currentPage, maxRowOnPage } = useSelector(state => {
         return {
             isLoaded: state.userReducer.isLoaded,
             users: state.userReducer.items,
             userInfo: state.userReducer.item,
+            pageCount: state.userReducer.pageCount,
+            currentPage: state.userReducer.currentPage,
+            maxRowOnPage: state.userReducer.maxRowOnPage,
         };
     });
 
     const [sortDirection, setDirection] = React.useState(false);
     const [typeSort, setTypeSort] = React.useState('');
     const [modeSelectData, setModeData] = React.useState(false);
-
+    const downPage = React.useRef(null);
     const dispatch = useDispatch();
 
-    // React.useEffect(() => {
-    //     let timerId = setTimeout(() => {
-    //         dispatch(axiosUsers())
-    //     }, 500);
-    //     return () => {
-    //         clearTimeout(timerId);
-    //     };
-    // }, [dispatch]);
-
-    const scrollToBottom = () => {
-        window.scrollTo({ top: 2000, behavior: 'smooth' });
+    const scrollToMyRef = () => {
+        window.scrollBy(0, downPage.current.scrollHeight);
     };
+
+    React.useEffect(() => {
+        let timerId = setTimeout(() => {
+            dispatch(axiosUsers())
+        }, 500);
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [dispatch]);
 
     const sortUsers = (type) => {
         const copyItems = [...users];
@@ -57,7 +61,7 @@ const Home = React.memo(() => {
 
     const viewMoreInfo = (user) => {
         dispatch(viewUserInfo(user));
-        let timerScroll = setTimeout(() => scrollToBottom(), 0);
+        let timerScroll = setTimeout(() => scrollToMyRef(), 0);
         return () => {
             clearTimeout(timerScroll);
         };
@@ -67,8 +71,19 @@ const Home = React.memo(() => {
         dispatch(addNewUser(user));
     }, [dispatch]);
 
-    const searchHandler = (value) => {
+    const filterUsers = (value) => {
         console.log(value);
+        // const filterItems = [...users];
+        // const finalFilter = filterItems.filter(item => {
+        //     return item['firstName'].toLowerCase().includes(value.toLowerCase())
+        //     || item['lastName'].toLowerCase().includes(value.toLowerCase())
+        //     || item['email'].toLowerCase().includes(value.toLowerCase())
+        //     || item['phone'].toLowerCase().includes(value.toLowerCase())
+        // })
+        // if (newValue !== value) {
+        //     return;
+        // };
+        // dispatch(setUsers(finalFilter));
     };
 
     const getSmall = (valueSmall) => {
@@ -96,7 +111,7 @@ const Home = React.memo(() => {
             <div className="content__items">
                 {
                     !modeSelectData 
-                        ? <ToogleData 
+                        ? <ToggleData 
                             getSmallData={ getSmall }
                             getBigData={ getBig }
                         />
@@ -107,8 +122,8 @@ const Home = React.memo(() => {
                                     addPerson={ addNewPerson }
                                     users = { users }
                                 />
-                                <FilterForm searchUser={ searchHandler } />
-                                <table className="content__table">
+                                <FilterForm searchUser={ filterUsers } />
+                                <table className="content__table" ref={ downPage }>
                                     <tbody>
                                         <tr>
                                             {
@@ -150,6 +165,7 @@ const Home = React.memo(() => {
                                         }
                                     </tbody>
                                 </table>
+                                <PaginationTable users={ users } pageCount={ pageCount } currentPage={ currentPage } maxRowOnPage={ maxRowOnPage } />
                             </>
                             : <LoadingData isLoaded={ isLoaded } />
                 }

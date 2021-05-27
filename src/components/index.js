@@ -3,7 +3,8 @@ import LoadingData from './LoadingData';
 import UserInfo from './UserInfo';
 import NewUser from './NewUser';
 import FilterForm from './FilterForm';
-import ToogleData from './ToogleData';
+import ToggleData from './ToggleData';
+import PaginationTable from './PaginationTable';
 
 export {
     UserData,
@@ -11,5 +12,6 @@ export {
     UserInfo,
     NewUser,
     FilterForm,
-    ToogleData,
+    ToggleData,
+    PaginationTable,
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ToogleData = ({ getSmallData, getBigData }) => {
+const ToggleData = ({ getSmallData, getBigData }) => {
 
     const API_SMALL = `https://raw.githubusercontent.com/Dmitriev-Nikolay/fake-api-for-projects/main/fake-json/react-table/small_data.json`;
     const API_BIG = `https://raw.githubusercontent.com/Dmitriev-Nikolay/fake-api-for-projects/main/fake-json/react-table/big_data.json`;
@@ -29,4 +29,4 @@ const ToogleData = ({ getSmallData, getBigData }) => {
     );
 };
 
-export default ToogleData;
+export default ToggleData;

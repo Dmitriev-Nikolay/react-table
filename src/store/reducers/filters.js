@@ -4,7 +4,7 @@ const initialState = {
 
 const filters = (state = initialState, action) => {
     switch (action.type) {
-        case 'SET_SEARCH': 
+        case 'SET_FILTER': 
             return {
                 ...state,
                 filteredItems: action.payload,

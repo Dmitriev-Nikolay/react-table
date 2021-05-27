@@ -87,6 +87,27 @@ body {
   width: $container-width;
   margin: 0 auto;
 
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+  }
+
+  &__pagination-links {
+    border: 5px solid $orange;
+    padding: 5px;
+    margin: 0 2px;
+    color: $orange;
+    border-radius: 10px;
+    font-size: 16px;
+    width: 40px;
+
+    &:hover {
+      background: $orange;
+      color: $white;
+    }
+  }
+
   &__toogle-data {
     display: flex;
     justify-content: center;

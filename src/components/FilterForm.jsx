@@ -8,7 +8,7 @@ const FilterForm = ({ searchUser }) => {
         setValue(event.target.value);
     };
 
-    const searchTr = (strValue) => {
+    const searchUsers = (strValue) => {
         searchUser(strValue);
     };
 
@@ -21,7 +21,8 @@ const FilterForm = ({ searchUser }) => {
             />
             <button 
                 className="button" 
-                onClick={ () => searchTr(value) } >
+                onClick={ () => searchUsers(value) } 
+            >
                 Поиск
             </button>
         </div>
