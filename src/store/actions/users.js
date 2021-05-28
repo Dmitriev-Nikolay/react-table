@@ -33,3 +33,8 @@ export const addNewUser = (newUser) => ({
     type: 'ADD_NEW_USER',
     payload: newUser,
 });
+
+export const setPage = (page) => ({
+    type: 'SET_PAGE',
+    payload: page,
+});

@@ -1,8 +1,7 @@
 import React from 'react';
 
 const FilterForm = ({ searchUser }) => {
-
-    const [value, setValue] = React.useState('')
+    const [value, setValue] = React.useState('');
 
     const valueChangeHandler = (event) => {
         setValue(event.target.value);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { axiosUsers, setUsers, viewUserInfo, addNewUser } from '../../store/actions/users';
+import { axiosUsers, setUsers, viewUserInfo, addNewUser, setPage } from '../../store/actions/users';
 // import { setFilter } from '../../store/actions/filters';
 
 import { UserData, LoadingData, UserInfo, NewUser, FilterForm, ToggleData, PaginationTable } from '../../components';
@@ -25,16 +25,17 @@ const Home = React.memo(() => {
             maxRowOnPage: state.userReducer.maxRowOnPage,
         };
     });
+    
+    const renderUsers = users.slice(currentPage * maxRowOnPage - maxRowOnPage, currentPage * maxRowOnPage); // порционный рендеринг
 
     const [sortDirection, setDirection] = React.useState(false);
     const [typeSort, setTypeSort] = React.useState('');
     const [modeSelectData, setModeData] = React.useState(false);
     const downPage = React.useRef(null);
+    const notTable = React.useRef();
     const dispatch = useDispatch();
 
-    const scrollToMyRef = () => {
-        window.scrollBy(0, downPage.current.scrollHeight);
-    };
+    const scrollToMyRef = () => window.scrollBy(0, downPage.current.scrollHeight); // скролл на UserInfo
 
     React.useEffect(() => {
         let timerId = setTimeout(() => {
@@ -86,6 +87,8 @@ const Home = React.memo(() => {
         // dispatch(setUsers(finalFilter));
     };
 
+    const selectPage = (value) => dispatch(setPage(value));
+
     const getSmall = (valueSmall) => {
         setModeData(true);
         let timerIdSmall = setTimeout(() => {
@@ -106,8 +109,20 @@ const Home = React.memo(() => {
         };
     };
 
+    React.useEffect(() => {
+        const clickedOut = (event) => {
+            const target = event.target;
+            const path = event.path || (event.composedPath && event.composedPath()) || event.composedPath(target); // для всех браузеров
+            if (!path.includes(notTable.current)) {
+                dispatch(viewUserInfo(null));
+            };
+        };
+        document.addEventListener('click', clickedOut);
+        return () => document.removeEventListener('click', clickedOut);
+    }, [dispatch]);
+
     return (
-        <div className="container">
+        <div className="container" ref={ downPage }>
             <div className="content__items">
                 {
                     !modeSelectData 
@@ -115,7 +130,7 @@ const Home = React.memo(() => {
                             getSmallData={ getSmall }
                             getBigData={ getBig }
                         />
-                        :isLoaded
+                        : isLoaded
                             ? <>
                                 <h1 className="content__title">React-table</h1>
                                 <NewUser 
@@ -123,8 +138,12 @@ const Home = React.memo(() => {
                                     users = { users }
                                 />
                                 <FilterForm searchUser={ filterUsers } />
-                                <table className="content__table" ref={ downPage }>
-                                    <tbody>
+                                <PaginationTable 
+                                    pageCount={ pageCount } 
+                                    selectPage={ selectPage } 
+                                />
+                                <table className="content__table">
+                                    <tbody ref={ notTable }>
                                         <tr>
                                             {
                                                 theadArr.map(({ name, id }) => {
@@ -151,7 +170,7 @@ const Home = React.memo(() => {
                                             }
                                         </tr>
                                         {
-                                            users.map((user, i) => {
+                                            renderUsers.map((user, i) => {
                                                 return (
                                                     <tr
                                                         className="content__table__strings"
@@ -165,13 +184,16 @@ const Home = React.memo(() => {
                                         }
                                     </tbody>
                                 </table>
-                                <PaginationTable users={ users } pageCount={ pageCount } currentPage={ currentPage } maxRowOnPage={ maxRowOnPage } />
+                                <PaginationTable 
+                                    pageCount={ pageCount } 
+                                    selectPage={ selectPage } 
+                                />
                             </>
                             : <LoadingData isLoaded={ isLoaded } />
                 }
                 {
                     userInfo && <UserInfo { ...userInfo } />
-                }    
+                }
             </div>
         </div>
     );

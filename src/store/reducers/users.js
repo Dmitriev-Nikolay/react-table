@@ -4,7 +4,6 @@ const initialState = {
     item: null,
     maxRowOnPage: 50,
     currentPage: 1,
-    offset: 0,
     pageCount: null,
 };
 
@@ -13,9 +12,17 @@ const users = (state = initialState, action) => {
         case 'SET_USERS':
             return {
                 ...state,
-                items: action.payload.slice(state.offset, state.offset + state.maxRowOnPage),
+                // items: action.payload.slice(state.offset, state.offset + state.maxRowOnPage),
+                // users.slice(currentPage * maxRowOnPage - maxRowOnPage + 1, currentPage * maxRowOnPage);
+                // items: action.payload.slice(state.currentPage * state.maxRowOnPage - state.maxRowOnPage + 1, state.currentPage * state.maxRowOnPage),
+                items: action.payload,
                 isLoaded: true,
-                pageCount: Math.ceil(action.payload.length / state.maxRowOnPage),
+                pageCount: Math.ceil(action.payload.length / state.maxRowOnPage),            
+            };
+        case 'SET_PAGE':
+            return {
+                ...state,
+                currentPage: action.payload,
             };
         case 'SET_LOADED':
             return {
@@ -23,9 +30,6 @@ const users = (state = initialState, action) => {
                 isLoaded: action.payload,
             };
         case 'VIEW_USER':
-            if(!action.payload.description) {
-                action.payload.description = '';
-            };
             return {
                 ...state,
                 item: action.payload,

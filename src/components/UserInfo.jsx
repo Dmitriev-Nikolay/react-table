@@ -13,7 +13,7 @@ const UserInfo = (props) => {
         <div className="user-info">
             <span>Выбран пользователь: <b>{ firstName } { lastName }</b></span>
             <p>Описание:</p>
-            <textarea readOnly="readonly" value={ description }></textarea>
+            <textarea readOnly="readonly" value={ description ?  description : '' }></textarea>
             <span>Адрес проживания: <b>{ streetAddress }</b></span>
             <span>Город: <b>{ city }</b></span>
             <span>Провинция/штат: <b>{ state }</b></span>

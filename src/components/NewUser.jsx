@@ -2,18 +2,15 @@ import React from 'react'
 
 const NewUser = ({ addPerson }) => {
     const [isShown, setIsShown] = React.useState(false);
-
     const [id, setId] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [phone, setPhone] = React.useState('');
 
-    const toggleFieldset = () => setIsShown(!isShown);
+    const toggleFieldSet = () => setIsShown(!isShown);
 
-    const handleChange = (event, setFunc) => {
-        return setFunc(event.target.value);
-    };
+    const handleChange = (event, setFunc) => setFunc(event.target.value);
 
     const addNewUserInTable = (e) => {
         e.preventDefault();
@@ -40,7 +37,8 @@ const NewUser = ({ addPerson }) => {
         <div className="container__form">
             <button 
                 className="button" 
-                onClick={ toggleFieldset }>
+                onClick={ toggleFieldSet }
+            >
                 Добавить пользователя
             </button>
             { 
