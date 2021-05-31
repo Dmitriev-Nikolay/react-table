@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const NewUser = ({ addPerson }) => {
     const [isShown, setIsShown] = React.useState(false);

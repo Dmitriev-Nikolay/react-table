@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { axiosUsers, setUsers, viewUserInfo, addNewUser, setPage } from '../../store/actions/users';
-// import { setFilter } from '../../store/actions/filters';
 
 import { UserData, LoadingData, UserInfo, NewUser, FilterForm, ToggleData, PaginationTable } from '../../components';
 
@@ -25,26 +24,44 @@ const Home = React.memo(() => {
             maxRowOnPage: state.userReducer.maxRowOnPage,
         };
     });
-    
-    const renderUsers = users.slice(currentPage * maxRowOnPage - maxRowOnPage, currentPage * maxRowOnPage); // порционный рендеринг
 
+    // const renderUsers = users.slice(currentPage * maxRowOnPage - maxRowOnPage, currentPage * maxRowOnPage); // порционный рендеринг
+
+    const [valueFilter, setValueFilter] = React.useState('');
     const [sortDirection, setDirection] = React.useState(false);
     const [typeSort, setTypeSort] = React.useState('');
     const [modeSelectData, setModeData] = React.useState(false);
+    const [stateVisibleUserInfo, setVisibleUserInfo] = React.useState(false); // видимость меню сортировки
     const downPage = React.useRef(null);
     const notTable = React.useRef();
     const dispatch = useDispatch();
-
+    
     const scrollToMyRef = () => window.scrollBy(0, downPage.current.scrollHeight); // скролл на UserInfo
 
-    React.useEffect(() => {
-        let timerId = setTimeout(() => {
-            dispatch(axiosUsers())
-        }, 500);
+
+    /* Получение данных */
+    
+    const getSmall = (valueSmall) => {
+        setModeData(true);
+        let timerIdSmall = setTimeout(() => {
+            dispatch(axiosUsers(valueSmall))
+        }, 2000);
         return () => {
-            clearTimeout(timerId);
+            clearTimeout(timerIdSmall);
         };
-    }, [dispatch]);
+    };
+
+    const getBig = (valueBig) => {
+        setModeData(true);
+        let timerIdBig = setTimeout(() => {
+            dispatch(axiosUsers(valueBig))
+        }, 2000);
+        return () => {
+            clearTimeout(timerIdBig);
+        };
+    };
+
+    /* Сортировка данных по столбцам */
 
     const sortUsers = (type) => {
         const copyItems = [...users];
@@ -60,7 +77,10 @@ const Home = React.memo(() => {
         dispatch(setUsers(sortableUsers));
     };
 
+    /* Просмотр подробных данных о пользователе */
+
     const viewMoreInfo = (user) => {
+        setVisibleUserInfo(true);
         dispatch(viewUserInfo(user));
         let timerScroll = setTimeout(() => scrollToMyRef(), 0);
         return () => {
@@ -68,53 +88,37 @@ const Home = React.memo(() => {
         };
     };
 
+    /* Добавление нового пользователя */
+
     const addNewPerson = React.useCallback((user) => {
         dispatch(addNewUser(user));
     }, [dispatch]);
 
-    const filterUsers = (value) => {
-        console.log(value);
-        // const filterItems = [...users];
-        // const finalFilter = filterItems.filter(item => {
-        //     return item['firstName'].toLowerCase().includes(value.toLowerCase())
-        //     || item['lastName'].toLowerCase().includes(value.toLowerCase())
-        //     || item['email'].toLowerCase().includes(value.toLowerCase())
-        //     || item['phone'].toLowerCase().includes(value.toLowerCase())
-        // })
-        // if (newValue !== value) {
-        //     return;
-        // };
-        // dispatch(setUsers(finalFilter));
+    const filteredItems = users.slice(currentPage * maxRowOnPage - maxRowOnPage, currentPage * maxRowOnPage).filter(user => {
+        return user.firstName.toLowerCase().includes(valueFilter.toLowerCase()) 
+        || user.lastName.toLowerCase().includes(valueFilter.toLowerCase())
+        || user.email.toLowerCase().includes(valueFilter.toLowerCase())
+        || user.phone.toLowerCase().includes(valueFilter.toLowerCase());
+    });
+
+    /* Отлов состояния инпута фильтра */
+
+    const valueChangeHandler = (event) => {
+        setValueFilter(event.target.value);
     };
+
+    /* Выбор страницы */
 
     const selectPage = (value) => dispatch(setPage(value));
 
-    const getSmall = (valueSmall) => {
-        setModeData(true);
-        let timerIdSmall = setTimeout(() => {
-            dispatch(axiosUsers(valueSmall))
-        }, 1500);
-        return () => {
-            clearTimeout(timerIdSmall);
-        };
-    };
-
-    const getBig = (valueBig) => {
-        setModeData(true);
-        let timerIdBig = setTimeout(() => {
-            dispatch(axiosUsers(valueBig))
-        }, 1500);
-        return () => {
-            clearTimeout(timerIdBig);
-        };
-    };
+    /* Отлов клика для отображения/скрытия инфо о пользователе */
 
     React.useEffect(() => {
         const clickedOut = (event) => {
             const target = event.target;
             const path = event.path || (event.composedPath && event.composedPath()) || event.composedPath(target); // для всех браузеров
             if (!path.includes(notTable.current)) {
-                dispatch(viewUserInfo(null));
+                setVisibleUserInfo(false);
             };
         };
         document.addEventListener('click', clickedOut);
@@ -133,14 +137,10 @@ const Home = React.memo(() => {
                         : isLoaded
                             ? <>
                                 <h1 className="content__title">React-table</h1>
-                                <NewUser 
-                                    addPerson={ addNewPerson }
-                                    users = { users }
-                                />
-                                <FilterForm searchUser={ filterUsers } />
-                                <PaginationTable 
-                                    pageCount={ pageCount } 
-                                    selectPage={ selectPage } 
+                                <NewUser addPerson={ addNewPerson } />
+                                <FilterForm 
+                                    searchUsers={ valueChangeHandler } 
+                                    valueFilter={ valueFilter } 
                                 />
                                 <table className="content__table">
                                     <tbody ref={ notTable }>
@@ -170,7 +170,7 @@ const Home = React.memo(() => {
                                             }
                                         </tr>
                                         {
-                                            renderUsers.map((user, i) => {
+                                            filteredItems.map((user, i) => {
                                                 return (
                                                     <tr
                                                         className="content__table__strings"
@@ -192,7 +192,7 @@ const Home = React.memo(() => {
                             : <LoadingData isLoaded={ isLoaded } />
                 }
                 {
-                    userInfo && <UserInfo { ...userInfo } />
+                    stateVisibleUserInfo && <UserInfo { ...userInfo } />
                 }
             </div>
         </div>

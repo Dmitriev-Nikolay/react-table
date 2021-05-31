@@ -88,6 +88,11 @@ body {
     justify-content: center;
     margin: 15px 0;
   }
+  
+  .active {
+    background: $orange;
+    color: $white;
+  }
 
   &__pagination-links {
     border: 5px solid $orange;
@@ -102,7 +107,7 @@ body {
       background: $orange;
       color: $white;
       transform: scale(1.15);
-      transition: .2s;
+      transition: 0.2s;
     }
   }
 
@@ -142,6 +147,10 @@ body {
     input::placeholder {
       color: $orange;
     }
+  }
+
+  &__search-arrow {
+    transform: rotate(0);
   }
 
   &__search {
