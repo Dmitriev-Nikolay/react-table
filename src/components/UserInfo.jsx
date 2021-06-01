@@ -1,6 +1,6 @@
 import React from "react";
 
-const UserInfo = (props) => {
+const UserInfo = React.memo((props) => {
     const { firstName, lastName, description } = props;  // { ...userInfo }
 
     /* Доступ к вложенному объекту адреса */
@@ -20,6 +20,6 @@ const UserInfo = (props) => {
             <span>Индекс: <b>{ zip }</b></span>
         </div>
     );
-};
+});
 
 export default UserInfo;

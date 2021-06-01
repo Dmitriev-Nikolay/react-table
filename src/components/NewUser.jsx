@@ -1,6 +1,6 @@
 import React from 'react';
 
-const NewUser = ({ addPerson }) => {
+const NewUser = React.memo(({ addPerson }) => {
     const [isShown, setIsShown] = React.useState(false);
     const [id, setId] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
@@ -54,6 +54,6 @@ const NewUser = ({ addPerson }) => {
             }
         </div>
     );
-};
+});
 
 export default NewUser;

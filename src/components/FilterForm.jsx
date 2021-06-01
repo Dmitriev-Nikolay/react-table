@@ -1,10 +1,8 @@
 import React from 'react';
 
-const FilterForm = ({ searchUsers, valueFilter }) => {
+const FilterForm = React.memo(({ searchUsers, valueFilter }) => {
 
-    const searchUser = (strValue) => {
-        searchUsers(strValue);
-    };
+    const searchUser = (strValue) => searchUsers(strValue);
 
     return (
         <div className="container__search">
@@ -17,6 +15,6 @@ const FilterForm = ({ searchUsers, valueFilter }) => {
             <p>Начни ввод для поиска</p>
         </div >
     );
-};
+});
 
 export default FilterForm;

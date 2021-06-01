@@ -25,12 +25,10 @@ const Home = React.memo(() => {
         };
     });
 
-    // const renderUsers = users.slice(currentPage * maxRowOnPage - maxRowOnPage, currentPage * maxRowOnPage); // порционный рендеринг
-
     const [valueFilter, setValueFilter] = React.useState('');
     const [sortDirection, setDirection] = React.useState(false);
     const [typeSort, setTypeSort] = React.useState('');
-    const [modeSelectData, setModeData] = React.useState(false);
+    const [modeSelectData, setModeData] = React.useState(false); // выбор загрузки данных
     const [stateVisibleUserInfo, setVisibleUserInfo] = React.useState(false); // видимость меню сортировки
     const downPage = React.useRef(null);
     const notTable = React.useRef();
@@ -96,9 +94,9 @@ const Home = React.memo(() => {
 
     const filteredItems = users.slice(currentPage * maxRowOnPage - maxRowOnPage, currentPage * maxRowOnPage).filter(user => {
         return user.firstName.toLowerCase().includes(valueFilter.toLowerCase()) 
-        || user.lastName.toLowerCase().includes(valueFilter.toLowerCase())
-        || user.email.toLowerCase().includes(valueFilter.toLowerCase())
-        || user.phone.toLowerCase().includes(valueFilter.toLowerCase());
+            || user.lastName.toLowerCase().includes(valueFilter.toLowerCase())
+            || user.email.toLowerCase().includes(valueFilter.toLowerCase())
+            || user.phone.toLowerCase().includes(valueFilter.toLowerCase());
     });
 
     /* Отлов состояния инпута фильтра */
@@ -174,7 +172,7 @@ const Home = React.memo(() => {
                                                 return (
                                                     <tr
                                                         className="content__table__strings"
-                                                        key={ `${user.id}_${i}` }
+                                                        key={ `${ user.id }_${ i }` }
                                                         onClick={ () => viewMoreInfo(user) }
                                                     >
                                                         <UserData { ...user } />

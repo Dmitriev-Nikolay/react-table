@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
 
-const PaginationTable = (props) => {
+const PaginationTable = React.memo((props) => {
     const [page, setPage] = React.useState(null);
     const { pageCount, selectPage } = props;
     const selectPages = (value) => {
@@ -18,6 +18,6 @@ const PaginationTable = (props) => {
             { links }
         </div>
     );
-};
+});
 
 export default PaginationTable;
