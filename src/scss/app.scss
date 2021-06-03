@@ -88,7 +88,7 @@ body {
     justify-content: center;
     margin: 15px 0;
   }
-  
+
   .active {
     background: $orange;
     color: $white;
@@ -115,7 +115,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 100px);
+    height: 70vh;
   }
 
   &__form {
