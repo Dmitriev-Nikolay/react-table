@@ -5,6 +5,8 @@ import { axiosUsers, setUsers, viewUserInfo, addNewUser, setPage } from '../../s
 
 import { UserData, LoadingData, UserInfo, NewUser, FilterForm, ToggleData, PaginationTable } from '../../components';
 
+import myLogo from '../../assets/My_logo.png';
+
 const theadArr = [
     { name: 'id', id: 1 },
     { name: 'firstName', id: 2 },
@@ -193,6 +195,15 @@ const Home = React.memo(() => {
                     stateVisibleUserInfo && <UserInfo { ...userInfo } />
                 }
             </div>
+            { 
+                isLoaded && 
+                <div className="dev">
+                    <span className="who-dev">Разработка приложения:</span>
+                    <a href="https://github.com/Dmitriev-Nikolay" target="_blank" rel="noreferrer">
+                        <img width="40" src={ myLogo } alt="My logo" />
+                    </a>
+                </div> 
+            }
         </div>
     );
 });

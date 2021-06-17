@@ -168,6 +168,27 @@ body {
       border: 5px solid $orange;
     }
   }
+
+  .dev {
+    display: flex;
+    justify-content: flex-end;
+
+    img {
+      cursor: pointer;
+      transition: .5s;
+    }
+
+    img:hover {
+      -webkit-transform: scale(1.2);
+      -ms-transform: scale(1.2);
+      transform: scale(1.2);
+    }
+  }
+
+  .who-dev {
+    padding-right: 10px;
+    align-self: center;
+  }
 }
 
 svg {
